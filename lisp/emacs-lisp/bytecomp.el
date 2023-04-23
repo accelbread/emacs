@@ -3563,8 +3563,6 @@ lambda-expression."
                                ;;delq delete cl-delete
                                ;;nconc plist-put
                                )))
-                   ;; Don't warn for arguments to `ignore'.
-                   (not (eq byte-compile--for-effect 'for-effect-no-warn))
                    (byte-compile-warning-enabled-p
                     'ignored-return-value (car form)))
               (byte-compile-warn-x
@@ -4448,8 +4446,11 @@ This function is never called when `lexical-binding' is nil."
 
 (defun byte-compile-ignore (form)
   (dolist (arg (cdr form))
-    ;; Compile each argument for-effect but suppress unused-value warnings.
-    (byte-compile-form arg 'for-effect-no-warn))
+    ;; Compile args for value (to avoid warnings about unused values),
+    ;; emit a discard after each, and trust the LAP peephole optimiser
+    ;; to annihilate useless ops.
+    (byte-compile-form arg)
+    (byte-compile-discard))
   (byte-compile-form nil))
 
 ;; Return the list of items in CONDITION-PARAM that match PRED-LIST.
