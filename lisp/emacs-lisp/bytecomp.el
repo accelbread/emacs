@@ -4451,7 +4451,7 @@ This function is never called when `lexical-binding' is nil."
     ;; Compile args for value (to avoid warnings about unused values),
     ;; emit a discard after each, and trust the LAP peephole optimiser
     ;; to annihilate useless ops.
-    (byte-compile-form arg)
+    (byte-compile-form arg 'for-effect-no-warn)
     (byte-compile-discard))
   (byte-compile-form nil))
 
