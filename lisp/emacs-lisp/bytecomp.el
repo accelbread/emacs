@@ -3563,6 +3563,8 @@ lambda-expression."
                                ;;delq delete cl-delete
                                ;;nconc plist-put
                                )))
+                   ;; Don't warn for arguments to `ignore'.
+                   (not (eq byte-compile--for-effect 'for-effect-no-warn))
                    (byte-compile-warning-enabled-p
                     'ignored-return-value (car form)))
               (byte-compile-warn-x
